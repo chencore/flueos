@@ -8,8 +8,13 @@ import android.widget.Toast;
 
 import com.tokenpocket.opensdk.base.TPListener;
 import com.tokenpocket.opensdk.base.TPManager;
+import com.tokenpocket.opensdk.innerwallet.model.LinkAction;
 import com.tokenpocket.opensdk.simple.model.Authorize;
+import com.tokenpocket.opensdk.simple.model.Signature;
+import com.tokenpocket.opensdk.simple.model.Transaction;
+import com.tokenpocket.opensdk.simple.model.Transfer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,6 +74,101 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
     }
   }
 
+  private void sign() {
+    Signature signature = new Signature();
+    signature.setBlockchain("EOS");
+    signature.setProtocol("TokenPocket");
+    signature.setVersion("1.0");
+    signature.setDappName("Test demo");
+    signature.setDappIcon("https://eosknights.io/img/icon.png");
+    signature.setActionId("web-db4c5466-1a03-438c-90c9-2172e8becea5");
+    signature.setMemo("demo");
+    signature.setAction("sign");
+    signature.setMessage("message to sign");
+    TPManager.getInstance().signature(context, signature, new TPListener() {
+      @Override
+      public void onSuccess(String s) {
+        Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+        channel.invokeMethod("sign", s);
+      }
+
+      @Override
+      public void onError(String s) {
+      }
+
+      @Override
+      public void onCancel(String s) {
+      }
+    });
+  }
+
+  private void transfer(String from,String to,double amount) {
+    Transfer transfer = new Transfer();
+    transfer.setBlockchain("EOS");
+    transfer.setProtocol("TokenPocket");
+    transfer.setVersion("1.0");
+    transfer.setDappName("Test demo");
+    transfer.setDappIcon("https://eosknights.io/img/icon.png");
+    transfer.setActionId("web-db4c5466-1a03-438c-90c9-2172e8becea5");
+    transfer.setMemo("demo");
+    transfer.setAction("transfer");
+    transfer.setFrom(from);
+    transfer.setTo(to);
+    transfer.setPrecision(4);
+    transfer.setContract("eosio.token");
+    transfer.setAmount(amount);
+    transfer.setSymbol("EOS");
+    transfer.setDesc("");
+    TPManager.getInstance().transfer(context, transfer, new TPListener() {
+      @Override
+      public void onSuccess(String s) {
+        Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+        channel.invokeMethod("pushTx", transfer);
+      }
+
+      @Override
+      public void onError(String s) {
+
+      }
+
+      @Override
+      public void onCancel(String s) {
+
+      }
+    });
+  }
+
+  private void pushTx(String actions) {
+
+    Transaction transaction = new Transaction();
+    transaction.setBlockchain("EOS");
+    transaction.setProtocol("TokenPocket");
+    transaction.setVersion("1.0");
+    transaction.setDappName("Test demo");
+    transaction.setDappIcon("https://eosknights.io/img/icon.png");
+    transaction.setActionId("web-db4c5466-1a03-438c-90c9-2172e8becea5");
+    transaction.setAction("pushTransaction");
+    transaction.setLinkActions(new ArrayList<LinkAction>());
+    transaction.setActions(actions);
+    TPManager.getInstance().pushTransaction(context, transaction, new TPListener() {
+      @Override
+      public void onSuccess(String s) {
+        Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+        channel.invokeMethod("pushTx", s);
+      }
+
+      @Override
+      public void onError(String s) {
+
+      }
+
+      @Override
+      public void onCancel(String s) {
+
+      }
+    });
+  }
+
   private void tpAuthorize() {
     Authorize authorize = new Authorize();
     authorize.setBlockchain("EOS");
@@ -81,25 +181,6 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
     authorize.setAction("login");
     authorize.setExpired(1000);
     TPManager tpManager = TPManager.getInstance();
-    if(context==null){
-      channel.invokeMethod("getAuthInfo", "context is null");
-    }else{
-      try {
-        channel.invokeMethod("getAuthInfo", "context is not null");
-        Toast.makeText(context, "sssss", Toast.LENGTH_LONG).show();
-        PackageManager packageManager = context.getPackageManager();
-
-        PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(),0);
-        int val3 = packageInfo.applicationInfo.labelRes;
-        //getPackageName:com.example.tp_flutter_plugin_example
-        channel.invokeMethod("getAuthInfo", "getPackageName:" + context.getPackageName());
-        channel.invokeMethod("getAuthInfo", "labelRes:"+ val3);
-        String value = context.getResources().getString(val3);
-        channel.invokeMethod("getAuthInfo", "value:"+ value);
-      } catch (PackageManager.NameNotFoundException e) {
-        e.printStackTrace();
-      }
-    }
     tpManager.authorize(context, authorize, new TPListener() {
       @Override
       public void onSuccess(String s) {
@@ -107,7 +188,6 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
         // 主动返回数据给Flutter
         channel.invokeMethod("getAuthInfo", s);
       }
-
       @Override
       public void onError(String s) {
         channel.invokeMethod("getAuthInfo", s);
