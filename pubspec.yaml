@@ -1,7 +1,7 @@
 name: tp_flutter_plugin
-description: A new Flutter project.
+description: TokenPocket Wallet Plugin.
 version: 0.0.1
-homepage:
+homepage: https://github.com/chencore/tp_flutter_plugin.git
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
