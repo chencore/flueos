@@ -102,7 +102,7 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
     });
   }
 
-  private void transfer(String from,String to,double amount) {
+  private void transfer(String from,String to,String contract,String symbol,double amount,String desc) {
     Transfer transfer = new Transfer();
     transfer.setBlockchain("EOS");
     transfer.setProtocol("TokenPocket");
@@ -115,10 +115,10 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
     transfer.setFrom(from);
     transfer.setTo(to);
     transfer.setPrecision(4);
-    transfer.setContract("eosio.token");
+    transfer.setContract(contract);
     transfer.setAmount(amount);
-    transfer.setSymbol("EOS");
-    transfer.setDesc("");
+    transfer.setSymbol(symbol);
+    transfer.setDesc(desc);
     TPManager.getInstance().transfer(context, transfer, new TPListener() {
       @Override
       public void onSuccess(String s) {
