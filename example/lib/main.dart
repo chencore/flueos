@@ -16,7 +16,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> implements TPListener{
+class _MyAppState extends State<MyApp> implements TPListener {
   String _platformVersion = 'Unknown';
 
   @override
@@ -44,32 +44,36 @@ class _MyAppState extends State<MyApp> implements TPListener{
       //_platformVersion = platformVersion;
     });
   }
+
   //Text('Running on: $_platformVersion\n'),
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        home: Scaffold(
+      appBar: AppBar(
+        title: const Text('Plugin example app'),
+      ),
+      body: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Container(
-              height: 200,
-              child: Text('android_show_view'),
-            ),
-            IconButton(
-              icon: Icon(Icons.thumb_up),
-              onPressed: () async{
-                await TpFlutterPlugin.authorize("bbb");
+            ElevatedButton(
+              onPressed: () async {
+                await TpFlutterPlugin.authorize("授权");
               },
+              child: const Text('授权'),
             ),
+            ElevatedButton(
+              onPressed: () async {
+                await TpFlutterPlugin.transfer("edenbettest1", "edenbettest2",
+                    "eos.io", "EOS", "0.001", "testaab");
+              },
+              child: const Text('转账测试'),
+            )
           ],
         ),
       ),
-      )
-    );
+    ));
   }
 
   @override

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/services.dart';
@@ -6,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'TPListener.dart';
 
 class TpFlutterPlugin {
-  static MethodChannel _channel = MethodChannel('tp_flutter_plugin')..setMethodCallHandler(_handler);
+  static MethodChannel _channel = MethodChannel('tp_flutter_plugin')
+    ..setMethodCallHandler(_handler);
+
   ///监听
   static final tpListeners = <TPListener>[];
 
@@ -16,8 +17,19 @@ class TpFlutterPlugin {
   }
 
   static Future<String> authorize(String memo) async {
-    Map map = await _channel.invokeMethod("authorize", {
-      "memo" : memo
+    Map map = await _channel.invokeMethod("authorize", {"memo": memo});
+    return map["status"];
+  }
+
+  static Future<String> transfer(String from, String to, String contract,
+      String symbol, String amount, String desc) async {
+    Map map = await _channel.invokeMethod("transfar", {
+      "from": from,
+      "to": to,
+      "contract": contract,
+      "symbol": symbol,
+      "amount": amount,
+      "desc": desc
     });
     return map["status"];
   }
@@ -26,6 +38,8 @@ class TpFlutterPlugin {
   static Future<dynamic> _handler(MethodCall methodCall) {
     if ("getAuthInfo" == methodCall.method) {
       // 监听
+      receiveData(methodCall.arguments);
+    } else if ("transfar" == methodCall.method) {
       receiveData(methodCall.arguments);
     }
     return Future.value(true);

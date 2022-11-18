@@ -48,7 +48,13 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
       result.success("Android " + android.os.Build.VERSION.RELEASE);
     }else if ("authorize".equals(call.method)) {
       authorize(call.arguments, result);
-    }  else {
+    } else if ("transfar".equals(call.method)) {
+      transfar(call.arguments, result);
+    } else if ("sign".equals(call.method)) {
+      sign(call.arguments, result);
+    } else if ("pushTx".equals(call.method)) {
+      pushTx(call.arguments, result);
+    }else {
       result.notImplemented();
     }
   }
@@ -57,13 +63,13 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
   }
-
+  
   private void authorize(Object args, Result result) {
     HashMap map = (HashMap) args;
     try {
       String testMessage = map.get("memo").toString();
       Map<String, Object> resMap = new HashMap<>();
-      resMap.put("status", "aaaaaaa");
+      resMap.put("status", "1");
       resMap.put("message", "我收到了：" + testMessage);
       tpAuthorize();
       //channel.invokeMethod("getAuthInfo", "阿迪是的撒打算打算");
@@ -71,6 +77,56 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
     } catch (Exception e) {
       e.printStackTrace();
       channel.invokeMethod("getAuthInfo", e.getMessage());
+    }
+  }
+
+  private void transfar(Object args, Result result) {
+    HashMap map = (HashMap) args;
+    try {
+      String from = map.get("from").toString();
+      String to = map.get("to").toString();
+      String contract = map.get("contract").toString();
+      String symbol = map.get("symbol").toString();
+      double amount = Double.valueOf(map.get("amount")==null?"0":map.get("amount").toString());
+      String desc = map.get("desc").toString();
+      Map<String, Object> resMap = new HashMap<>();
+      resMap.put("status", "1");
+      resMap.put("message", "transfar");
+      transfer(from,to,contract,symbol,amount,desc);
+      //channel.invokeMethod("getAuthInfo", "阿迪是的撒打算打算");
+      result.success(resMap);
+    } catch (Exception e) {
+      e.printStackTrace();
+      channel.invokeMethod("getAuthInfo", e.getMessage());
+    }
+  }
+
+  private void sign(Object args, Result result) {
+    HashMap map = (HashMap) args;
+    try {
+      Map<String, Object> resMap = new HashMap<>();
+      resMap.put("status", "1");
+      resMap.put("message", "sign：");
+      sign();
+      result.success(resMap);
+    } catch (Exception e) {
+      e.printStackTrace();
+      channel.invokeMethod("getSignInfo", e.getMessage());
+    }
+  }
+
+  private void pushTx(Object args, Result result) {
+    HashMap map = (HashMap) args;
+    try {
+      String actions = map.get("actions").toString();
+      Map<String, Object> resMap = new HashMap<>();
+      resMap.put("status", "1");
+      resMap.put("message", "actions：" + actions);
+      pushTx(actions);
+      result.success(resMap);
+    } catch (Exception e) {
+      e.printStackTrace();
+      channel.invokeMethod("getTxInfo", e.getMessage());
     }
   }
 
@@ -89,15 +145,17 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
       @Override
       public void onSuccess(String s) {
         Toast.makeText(context, s, Toast.LENGTH_LONG).show();
-        channel.invokeMethod("sign", s);
+        channel.invokeMethod("getSignInfo", s);
       }
 
       @Override
       public void onError(String s) {
+        channel.invokeMethod("getSignInfo", s);
       }
 
       @Override
       public void onCancel(String s) {
+        channel.invokeMethod("getSignInfo", s);
       }
     });
   }
@@ -124,22 +182,22 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
       public void onSuccess(String s) {
         Toast.makeText(context, s, Toast.LENGTH_LONG).show();
         channel.invokeMethod("pushTx", transfer);
+        channel.invokeMethod("getTransInfo", s);
       }
 
       @Override
       public void onError(String s) {
-
+        channel.invokeMethod("getTransInfo", s);
       }
 
       @Override
       public void onCancel(String s) {
-
+        channel.invokeMethod("getTransInfo", s);
       }
     });
   }
 
   private void pushTx(String actions) {
-
     Transaction transaction = new Transaction();
     transaction.setBlockchain("EOS");
     transaction.setProtocol("TokenPocket");
@@ -154,17 +212,17 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
       @Override
       public void onSuccess(String s) {
         Toast.makeText(context, s, Toast.LENGTH_LONG).show();
-        channel.invokeMethod("pushTx", s);
+        channel.invokeMethod("getTxInfo", s);
       }
 
       @Override
       public void onError(String s) {
-
+        channel.invokeMethod("getTxInfo", s);
       }
 
       @Override
       public void onCancel(String s) {
-
+        channel.invokeMethod("getTxInfo", s);
       }
     });
   }
