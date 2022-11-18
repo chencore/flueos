@@ -1,7 +1,7 @@
-name: tp_flutter_plugin
-description: TokenPocket Wallet Plugin.
+name: eos_flutter_plugin
+description: eos sdk Plugin.
 version: 0.0.1
-homepage: https://github.com/chencore/tp_flutter_plugin.git
+homepage: https://github.com/chencore/flueos.git
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
