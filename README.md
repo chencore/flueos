@@ -15,9 +15,11 @@ git clone https://github.com/chencore/flueos.git
 #### 在工程的pubspec.yaml文件中引用插件
 
 `
-  eos_flutter_plugin:
+eos_flutter_plugin:
     path: /flueos_code_path/
 `
+
+
 具体使用可以参考flueos中的example工程
 
 
