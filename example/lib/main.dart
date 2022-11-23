@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:tp_flutter_plugin/TPListener.dart';
-import 'package:tp_flutter_plugin/tp_flutter_plugin.dart';
+import 'package:eos_flutter_plugin/TPListener.dart';
+import 'package:eos_flutter_plugin/tp_flutter_plugin.dart';
+import 'package:dart_esr/dart_esr.dart' as Esr;
 
 void main() {
   runApp(const MyApp());
@@ -61,14 +62,40 @@ class _MyAppState extends State<MyApp> implements TPListener {
               onPressed: () async {
                 await TpFlutterPlugin.authorize("授权");
               },
-              child: const Text('授权'),
+              child: const Text('TP授权'),
             ),
             ElevatedButton(
               onPressed: () async {
                 await TpFlutterPlugin.transfer("edenbettest1", "edenbettest2",
                     "eos.io", "EOS", "0.001", "testaab");
               },
-              child: const Text('转账测试'),
+              child: const Text('TP转账测试'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                var esr = Esr.EOSIOSigningrequest('https://api.eosn.io', 'v1',
+                    chainName: Esr.ChainName.EOS);
+                var auth = <Esr.Authorization>[
+                  Esr.Authorization()
+                    ..actor = 'testName1111'
+                    ..permission = 'active'
+                ];
+
+                var data = <String, String>{'name': 'data'};
+
+                var actions = <Esr.Action>[
+                  Esr.Action()
+                    ..account = 'eosnpingpong'
+                    ..name = 'ping'
+                    ..authorization = auth
+                    ..data = data,
+                ];
+
+                var transaction = Esr.Transaction()..actions = actions;
+
+                var encoded = await esr.encodeTransaction(transaction);
+              },
+              child: const Text('Anchor_test'),
             )
           ],
         ),
