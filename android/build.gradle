@@ -23,6 +23,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 31
+    //compileSdkVersion flutter.compileSdkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -31,12 +32,14 @@ android {
 
     defaultConfig {
         minSdkVersion 19
+        //minSdkVersion flutter.minSdkVersion
     }
 }
 
 dependencies {
     //本地aar
-    provided files('libs/wallet-sdk-release.aar')
+    compileOnly files('libs/wallet-sdk-release.aar')
+    //provided files('libs/wallet-sdk-release.aar')
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'

@@ -50,26 +50,26 @@ class _MyAppState extends State<MyApp> implements TPListener {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-      appBar: AppBar(
-        title: const Text('Plugin example app'),
-      ),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('FluEOS example app'),
+        ),
+        body: Column(
+          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
+            buildTitleSection(context),
             ElevatedButton(
               onPressed: () async {
                 await TpFlutterPlugin.authorize("授权");
               },
-              child: const Text('TP授权'),
+              child: const Text('TP钱包授权'),
             ),
             ElevatedButton(
               onPressed: () async {
                 await TpFlutterPlugin.transfer("edenbettest1", "edenbettest2",
                     "eos.io", "EOS", "0.001", "testaab");
               },
-              child: const Text('TP转账测试'),
+              child: const Text('TP钱包转账'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -95,12 +95,52 @@ class _MyAppState extends State<MyApp> implements TPListener {
 
                 var encoded = await esr.encodeTransaction(transaction);
               },
-              child: const Text('Anchor_test'),
+              child: const Text('Anchor钱包转账'),
             )
           ],
         ),
       ),
-    ));
+    );
+  }
+
+  Widget buildTitleSection(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(32),
+      child: Row(
+        children: [
+          Expanded(
+            /*1*/
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /*2*/
+                Container(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: const Text(
+                    'Oeschinen Lake Campground',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Text(
+                  'Kandersteg, Switzerland',
+                  style: TextStyle(
+                    color: Colors.grey[500],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          /*3*/
+          Icon(
+            Icons.star,
+            color: Colors.red[500],
+          ),
+          const Text('41'),
+        ],
+      ),
+    );
   }
 
   @override
