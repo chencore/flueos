@@ -17,6 +17,7 @@ import com.tokenpocket.opensdk.simple.model.Transfer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import androidx.annotation.NonNull;
 
@@ -137,7 +138,9 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
     signature.setVersion("1.0");
     signature.setDappName("Test demo");
     signature.setDappIcon("https://eosknights.io/img/icon.png");
-    signature.setActionId("web-db4c5466-1a03-438c-90c9-2172e8becea5");
+    //signature.setActionId("web-db4c5466-1a03-438c-90c9-2172e8becea5");
+    UUID uuid = UUID.randomUUID();
+    signature.setActionId("web-"+uuid.toString());
     signature.setMemo("demo");
     signature.setAction("sign");
     signature.setMessage("message to sign");
@@ -167,7 +170,9 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
     transfer.setVersion("1.0");
     transfer.setDappName("Test demo");
     transfer.setDappIcon("https://eosknights.io/img/icon.png");
-    transfer.setActionId("web-db4c5466-1a03-438c-90c9-2172e8becea5");
+    //transfer.setActionId("web-db4c5466-1a03-438c-90c9-2172e8becea5");
+    UUID uuid = UUID.randomUUID();
+    transfer.setActionId("web-"+uuid.toString());
     transfer.setMemo("demo");
     transfer.setAction("transfer");
     transfer.setFrom(from);
@@ -181,7 +186,7 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
       @Override
       public void onSuccess(String s) {
         Toast.makeText(context, s, Toast.LENGTH_LONG).show();
-        channel.invokeMethod("pushTx", transfer);
+        //channel.invokeMethod("pushTx", s);
         channel.invokeMethod("getTransInfo", s);
       }
 
@@ -204,7 +209,9 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
     transaction.setVersion("1.0");
     transaction.setDappName("Test demo");
     transaction.setDappIcon("https://eosknights.io/img/icon.png");
-    transaction.setActionId("web-db4c5466-1a03-438c-90c9-2172e8becea5");
+    //transaction.setActionId("web-db4c5466-1a03-438c-90c9-2172e8becea5");
+    UUID uuid = UUID.randomUUID();
+    transaction.setActionId("web-"+uuid.toString());
     transaction.setAction("pushTransaction");
     transaction.setLinkActions(new ArrayList<LinkAction>());
     transaction.setActions(actions);
@@ -234,7 +241,9 @@ public class TpFlutterPlugin implements FlutterPlugin, MethodCallHandler, Activi
     authorize.setVersion("1.0");
     authorize.setDappName("Test demo");
     authorize.setDappIcon("https://eosknights.io/img/icon.png");
-    authorize.setActionId("web-db4c5466-1a03-438c-90c9-2172e8becea5");
+    //authorize.setActionId("web-db4c5466-1a03-438c-90c9-2172e8becea5");
+    UUID uuid = UUID.randomUUID();
+    //transfer.setActionId("web-"+uuid.toString());
     authorize.setMemo("demo");
     authorize.setAction("login");
     authorize.setExpired(1000);

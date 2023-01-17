@@ -66,8 +66,8 @@ class _MyAppState extends State<MyApp> implements TPListener {
             ),
             ElevatedButton(
               onPressed: () async {
-                await TpFlutterPlugin.transfer("edenbettest1", "edenbettest2",
-                    "eos.io", "EOS", "0.001", "testaab");
+                await TpFlutterPlugin.transfer("edenbettest4", "edenbettest2",
+                    "eos.io", "EOS", "0.001", "11111ssd");
               },
               child: const Text('TP钱包转账'),
             ),
@@ -145,7 +145,6 @@ class _MyAppState extends State<MyApp> implements TPListener {
 
   @override
   void receiveMsg(String message) {
-    // TODO: implement receiveMsg
     print(message);
   }
 }
